@@ -17,7 +17,7 @@ export default class BurgerBuilder extends Component {
       cheese: 0,
       meat: 0
     },
-    totalPrice: 3
+    totalPrice: 1.5
   };
 
   addIngredientHandler = type => {
@@ -52,7 +52,7 @@ export default class BurgerBuilder extends Component {
   };
 
   render() {
-    const { ingredients } = this.state;
+    const { ingredients, totalPrice } = this.state;
     const disabledInfo = { ...ingredients };
 
     for (let key in disabledInfo) {
@@ -66,6 +66,7 @@ export default class BurgerBuilder extends Component {
           addIngHandler={this.addIngredientHandler}
           removeIngHandler={this.removeIngredientHandler}
           disabled={disabledInfo}
+          price={totalPrice}
         />
       </React.Fragment>
     );

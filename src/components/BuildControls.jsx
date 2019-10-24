@@ -12,6 +12,9 @@ const controls = [
 export default function BuildControls(props) {
   return (
     <div className={classes.BuildControls}>
+      <p>
+        Current price: <strong>£{props.price.toFixed(2)}</strong>
+      </p>
       {controls.map(ingredient => (
         <BuildControl
           key={ingredient.label}
