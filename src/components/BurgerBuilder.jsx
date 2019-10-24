@@ -53,6 +53,11 @@ export default class BurgerBuilder extends Component {
 
   render() {
     const { ingredients } = this.state;
+    const disabledInfo = { ...ingredients };
+
+    for (let key in disabledInfo) {
+      disabledInfo[key] = disabledInfo[key] <= 0;
+    }
     return (
       <React.Fragment>
         <Burger ingredients={ingredients} />
@@ -60,6 +65,7 @@ export default class BurgerBuilder extends Component {
         <BuildControls
           addIngHandler={this.addIngredientHandler}
           removeIngHandler={this.removeIngredientHandler}
+          disabled={disabledInfo}
         />
       </React.Fragment>
     );

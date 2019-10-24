@@ -18,6 +18,7 @@ export default function BuildControls(props) {
           label={ingredient.label}
           addIngHandler={() => props.addIngHandler(ingredient.type)}
           removeIngHandler={() => props.removeIngHandler(ingredient.type)}
+          disabled={props.disabled[ingredient.type]}
         />
       ))}
     </div>
