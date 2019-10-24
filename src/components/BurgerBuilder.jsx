@@ -20,7 +20,8 @@ export default class BurgerBuilder extends Component {
       meat: 0
     },
     totalPrice: 1.5,
-    purchaseable: false
+    purchaseable: false,
+    purchasing: false
   };
 
   updatePurchaseState = ingredients => {
@@ -67,8 +68,15 @@ export default class BurgerBuilder extends Component {
     this.updatePurchaseState(updatedIngredients);
   };
 
+  purchaseHandler = () => {
+    this.setState({ purchasing: true });
+  };
+  purchaseCancelHandler = () => {
+    this.setState({ purchasing: false });
+  };
+
   render() {
-    const { ingredients, totalPrice, purchaseable } = this.state;
+    const { ingredients, totalPrice, purchaseable, purchasing } = this.state;
     const disabledInfo = { ...ingredients };
 
     for (let key in disabledInfo) {
@@ -76,7 +84,7 @@ export default class BurgerBuilder extends Component {
     }
     return (
       <React.Fragment>
-        <Modal>
+        <Modal show={purchasing} modalClosed={this.purchaseCancelHandler}>
           <OrderSummary ingredients={ingredients} />
         </Modal>
         <Burger ingredients={ingredients} />
@@ -86,6 +94,7 @@ export default class BurgerBuilder extends Component {
           disabled={disabledInfo}
           price={totalPrice}
           purchaseable={purchaseable}
+          ordered={this.purchaseHandler}
         />
       </React.Fragment>
     );
