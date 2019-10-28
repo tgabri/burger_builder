@@ -16,17 +16,24 @@ const INGREDIENT_PRICES = {
 
 class BurgerBuilder extends Component {
   state = {
-    ingredients: {
-      salad: 0,
-      bacon: 0,
-      cheese: 0,
-      meat: 0
-    },
+    ingredients: null,
     totalPrice: 1.5,
     purchaseable: false,
     purchasing: false,
-    isLoading: false
+    isLoading: false,
+    error: false
   };
+
+  componentDidMount() {
+    axios
+      .get('https://burgerbuilder-31ab8.firebaseio.com/ingredients.json')
+      .then(({ data }) =>
+        this.setState({
+          ingredients: data
+        })
+      )
+      .catch(error => this.setState({ error: true }));
+  }
 
   updatePurchaseState = ingredients => {
     const sum = Object.keys(ingredients)
@@ -98,7 +105,7 @@ class BurgerBuilder extends Component {
       deliveryMethod: 'As Soon As'
     };
     axios
-      .post('/orders', order)
+      .post('/orders.json', order)
       .then(({ data }) =>
         this.setState({ isLoading: false, purchasing: false })
       )
@@ -111,17 +118,21 @@ class BurgerBuilder extends Component {
       totalPrice,
       purchaseable,
       purchasing,
-      isLoading
+      isLoading,
+      error
     } = this.state;
     const disabledInfo = { ...ingredients };
 
     for (let key in disabledInfo) {
       disabledInfo[key] = disabledInfo[key] <= 0;
     }
+    if (error) {
+      return <p>Ingredients cannot be loaded!</p>;
+    }
     return (
       <React.Fragment>
         <Modal show={purchasing} modalClosed={this.purchaseCancelHandler}>
-          {isLoading ? (
+          {isLoading || !ingredients ? (
             <Spinner />
           ) : (
             <OrderSummary
@@ -132,15 +143,21 @@ class BurgerBuilder extends Component {
             />
           )}
         </Modal>
-        <Burger ingredients={ingredients} />
-        <BuildControls
-          addIngHandler={this.addIngredientHandler}
-          removeIngHandler={this.removeIngredientHandler}
-          disabled={disabledInfo}
-          price={totalPrice}
-          purchaseable={purchaseable}
-          ordered={this.purchaseHandler}
-        />
+        {!ingredients ? (
+          <Spinner />
+        ) : (
+          <React.Fragment>
+            <Burger ingredients={ingredients} />
+            <BuildControls
+              addIngHandler={this.addIngredientHandler}
+              removeIngHandler={this.removeIngredientHandler}
+              disabled={disabledInfo}
+              price={totalPrice}
+              purchaseable={purchaseable}
+              ordered={this.purchaseHandler}
+            />
+          </React.Fragment>
+        )}
       </React.Fragment>
     );
   }
