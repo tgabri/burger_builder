@@ -89,27 +89,23 @@ class BurgerBuilder extends Component {
 
   purchaseContinueHandler = () => {
     // alert('You continue');
-    this.setState({ isLoading: true });
-    const order = {
-      ingredients: this.state.ingredients,
-      price: this.state.totalPrice.toFixed(2),
-      customer: {
-        name: 'Gabor',
-        address: {
-          street: 'Teststreet 1',
-          sortCode: 'sk102da',
-          country: 'UK'
-        },
-        email: 'test@test.com'
-      },
-      deliveryMethod: 'As Soon As'
-    };
-    axios
-      .post('/orders.json', order)
-      .then(({ data }) =>
-        this.setState({ isLoading: false, purchasing: false })
-      )
-      .catch(error => this.setState({ isLoading: false, purchasing: false }));
+    //
+    const queryParams = [];
+
+    for (let i in this.state.ingredients) {
+      queryParams.push(
+        `${encodeURIComponent(i)}=${encodeURIComponent(
+          this.state.ingredients[i]
+        )}`
+      );
+    }
+    queryParams.push(`price=${this.state.totalPrice}`);
+
+    const queryString = queryParams.join('&');
+    this.props.history.push({
+      pathname: '/checkout',
+      search: `?${queryString}`
+    });
   };
 
   render() {
@@ -127,7 +123,9 @@ class BurgerBuilder extends Component {
       disabledInfo[key] = disabledInfo[key] <= 0;
     }
     if (error) {
-      return <p>Ingredients cannot be loaded!</p>;
+      return (
+        <p style={{ textAlign: 'center' }}>Ingredients cannot be loaded!</p>
+      );
     }
     return (
       <React.Fragment>
