@@ -8,9 +8,6 @@ export default class Checkout extends Component {
     ingredients: null,
     price: 0
   };
-  //   static getDerivedStateFromProps(props, state) {
-  //     console.log(props, '<<<PROPS', state, '<<<STATE');
-  //   }
 
   UNSAFE_componentWillMount() {
     const query = new URLSearchParams(this.props.location.search);
