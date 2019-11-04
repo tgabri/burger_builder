@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+
 import Button from '../Reusable/Button';
 import classes from './ContactData.css';
 import axios from '../../axios-orders';
 import Spinner from '../Reusable/Spinner';
 import Input from '../Input/Input';
 
-export default class ContactData extends Component {
+class ContactData extends Component {
   state = {
     orderForm: {
       name: {
@@ -125,7 +127,6 @@ export default class ContactData extends Component {
     if (rules.maxLength) {
       isValid = value.length <= rules.maxLength && isValid;
     }
-
     return isValid;
   }
 
@@ -191,3 +192,12 @@ export default class ContactData extends Component {
     );
   }
 }
+
+const mapStateToProps = state => {
+  return {
+    ingredients: state.ingredients,
+    price: state.totalPrice
+  };
+};
+
+export default connect(mapStateToProps)(ContactData);
