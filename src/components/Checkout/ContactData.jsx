@@ -6,6 +6,12 @@ import classes from './ContactData.css';
 import axios from '../../axios-orders';
 import Spinner from '../Reusable/Spinner';
 import Input from '../Input/Input';
+import ErrorHandler from '../Reusable/ErrorHandler';
+import {
+  purchaseBurgerFail,
+  purchaseBurgerSuccess,
+  purchaseBurger
+} from '../../store/actions/index';
 
 class ContactData extends Component {
   state = {
@@ -90,13 +96,11 @@ class ContactData extends Component {
         valid: true
       }
     },
-    isFormValid: false,
-    isLoading: false
+    isFormValid: false
   };
 
   orderHandler = e => {
     e.preventDefault();
-    this.setState({ isLoading: true });
     const formData = {};
     for (let formElementId in this.state.orderForm) {
       formData[formElementId] = this.state.orderForm[formElementId].value;
@@ -106,13 +110,7 @@ class ContactData extends Component {
       price: this.props.price.toFixed(2),
       orderData: formData
     };
-    axios
-      .post('/orders.json', order)
-      .then(({ data }) => {
-        this.setState({ isLoading: false });
-        this.props.history.push('/');
-      })
-      .catch(error => this.setState({ isLoading: false }));
+    this.props.onOrderBurger(order);
   };
 
   checkIfValid(value, rules) {
@@ -154,7 +152,8 @@ class ContactData extends Component {
   };
 
   render() {
-    const { isLoading, orderForm, isFormValid } = this.state;
+    const { orderForm, isFormValid } = this.state;
+    const { isLoading } = this.props;
 
     const formElementsArray = [];
     for (let key in orderForm) {
@@ -195,9 +194,19 @@ class ContactData extends Component {
 
 const mapStateToProps = state => {
   return {
-    ingredients: state.ingredients,
-    price: state.totalPrice
+    ingredients: state.burgerBuilderReducer.ingredients,
+    price: state.burgerBuilderReducer.totalPrice,
+    isLoading: state.orderReducer.isLoading
   };
 };
 
-export default connect(mapStateToProps)(ContactData);
+const mapDispatchToProps = dispatch => {
+  return {
+    onOrderBurger: order => dispatch(purchaseBurger(order))
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(ErrorHandler(ContactData, axios));

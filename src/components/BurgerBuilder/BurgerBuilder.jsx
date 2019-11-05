@@ -1,6 +1,11 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import * as burgerBuilderActions from '../../store/actions/index';
+import {
+  addIngredient,
+  removeIngredient,
+  initIngredients,
+  purchaseInit
+} from '../../store/actions/index';
 import axios from '../../axios-orders';
 
 import Burger from '../Burger/Burger';
@@ -38,6 +43,7 @@ class BurgerBuilder extends Component {
   };
 
   purchaseContinueHandler = () => {
+    this.props.onInitPurchase();
     this.props.history.push('/checkout');
   };
 
@@ -46,8 +52,8 @@ class BurgerBuilder extends Component {
     const {
       totalPrice,
       ingredients,
-      addIngredient,
-      removeIngredient,
+      onAddIngredient,
+      onRemoveIngredient,
       error
     } = this.props;
     const disabledInfo = { ...ingredients };
@@ -80,8 +86,8 @@ class BurgerBuilder extends Component {
           <React.Fragment>
             <Burger ingredients={ingredients} />
             <BuildControls
-              addIngHandler={addIngredient}
-              removeIngHandler={removeIngredient}
+              addIngHandler={onAddIngredient}
+              removeIngHandler={onRemoveIngredient}
               disabled={disabledInfo}
               price={totalPrice}
               purchaseable={this.updatePurchaseState(ingredients)}
@@ -96,19 +102,19 @@ class BurgerBuilder extends Component {
 
 const mapStateToProps = state => {
   return {
-    ingredients: state.ingredients,
-    totalPrice: state.totalPrice,
-    error: state.error
+    ingredients: state.burgerBuilderReducer.ingredients,
+    totalPrice: state.burgerBuilderReducer.totalPrice,
+    error: state.burgerBuilderReducer.error
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
-    addIngredient: ingredientName =>
-      dispatch(burgerBuilderActions.addIngredient(ingredientName)),
-    removeIngredient: ingredientName =>
-      dispatch(burgerBuilderActions.removeIngredient(ingredientName)),
-    onInitIngredients: () => dispatch(burgerBuilderActions.initIngredients())
+    onAddIngredient: ingredientName => dispatch(addIngredient(ingredientName)),
+    onRemoveIngredient: ingredientName =>
+      dispatch(removeIngredient(ingredientName)),
+    onInitIngredients: () => dispatch(initIngredients()),
+    onInitPurchase: () => dispatch(purchaseInit())
   };
 };
 
