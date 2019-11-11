@@ -75,3 +75,18 @@ export const fetchOrders = () => {
       .catch(err => dispatch(fetchOrdersFail()));
   };
 };
+
+export const deleteOrderAction = id => {
+  return {
+    type: actionTypes.DELETE_ORDER,
+    id
+  };
+};
+
+export const deleteOrder = id => {
+  return dispatch => {
+    axios
+      .delete('/orders.json', { params: { id } })
+      .then(({ data }) => dispatch(deleteOrderAction(id)));
+  };
+};

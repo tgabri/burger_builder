@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { fetchOrders } from '../../store/actions/index';
+import { fetchOrders, deleteOrder } from '../../store/actions/index';
 import Order from './Order';
 import axios from '../../axios-orders';
 import ErrorHandler from '../Reusable/ErrorHandler';
@@ -12,7 +12,7 @@ class Orders extends Component {
   }
 
   render() {
-    const { orders, isLoading } = this.props;
+    const { orders, isLoading, onDeleteOrder } = this.props;
 
     if (isLoading) return <Spinner />;
     return (
@@ -22,6 +22,7 @@ class Orders extends Component {
             key={order.id}
             ingredients={order.ingredients}
             price={order.price}
+            deleteHandler={() => onDeleteOrder(order.id)}
           />
         ))}
       </div>
@@ -38,7 +39,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    onFetchOrders: () => dispatch(fetchOrders())
+    onFetchOrders: () => dispatch(fetchOrders()),
+    onDeleteOrder: id => dispatch(deleteOrder(id))
   };
 };
 

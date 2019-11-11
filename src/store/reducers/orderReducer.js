@@ -1,6 +1,5 @@
 import * as actionTypes from '../actions/actionTypes';
 import { updateObject } from '../utility';
-import { purchaseBurger, fetchOrders } from '../actions';
 
 const initialState = {
   isLoading: false,
@@ -52,6 +51,13 @@ const fetchOrdersFail = (state, action) => {
   });
 };
 
+const deleteOrder = (state, action) => {
+  const newOrdersList = state.orders.filter(order => order.id !== action.id);
+  return updateObject(state, {
+    orders: newOrdersList
+  });
+};
+
 const reducer = (state = initialState, action) => {
   switch (action.type) {
     case actionTypes.PURCHASE_BURGER_SUCCESS:
@@ -74,6 +80,9 @@ const reducer = (state = initialState, action) => {
 
     case actionTypes.FETCH_ORDERS_FAIL:
       return fetchOrdersFail(state, action);
+
+    case actionTypes.DELETE_ORDER:
+      return deleteOrder(state, action);
 
     default:
       return state;

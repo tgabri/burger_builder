@@ -12,7 +12,7 @@ export default function Order(props) {
   }
 
   return (
-    <div className={classes.Order}>
+    <div className={classes.Order} onClick={props.deleteHandler}>
       <p>
         Ingredients:
         {ingredients.map(ingredient => (
