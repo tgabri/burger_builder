@@ -8,7 +8,7 @@ import Spinner from '../Reusable/Spinner';
 
 class Orders extends Component {
   componentDidMount() {
-    this.props.onFetchOrders();
+    this.props.onFetchOrders(this.props.token);
   }
 
   render() {
@@ -33,13 +33,14 @@ class Orders extends Component {
 const mapStateToProps = state => {
   return {
     orders: state.orderReducer.orders,
-    isLoading: state.orderReducer.isLoading
+    isLoading: state.orderReducer.isLoading,
+    token: state.authReducer.token
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
-    onFetchOrders: () => dispatch(fetchOrders()),
+    onFetchOrders: token => dispatch(fetchOrders(token)),
     onDeleteOrder: id => dispatch(deleteOrder(id))
   };
 };

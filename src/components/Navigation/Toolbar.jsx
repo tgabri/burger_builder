@@ -12,7 +12,7 @@ export default function Toolbar(props) {
         <Logo height='80%' />
       </div>
       <nav className={classes.DesktopOnly}>
-        <NavigationItems />
+        <NavigationItems isAuthenticated={props.isAuthenticated} />
       </nav>
     </header>
   );
