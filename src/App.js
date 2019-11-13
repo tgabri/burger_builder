@@ -9,6 +9,7 @@ import Checkout from './components/Checkout/Checkout';
 import Orders from './components/Orders/Orders';
 import Auth from './components/Auth/Auth';
 import Logout from './components/Auth/Logout/Logout';
+require('dotenv').config();
 
 class App extends Component {
   componentDidMount() {
