@@ -98,7 +98,7 @@
     "braces": ">=2.3.1",
     "cryptiles": ">=4.1.2",
     "mem": ">=4.0.0",
-    "webpack-dev-server": "3.0.0"
+    "webpack-dev-server": "3.1.11"
   },
   "keywords": [],
   "author": "",
